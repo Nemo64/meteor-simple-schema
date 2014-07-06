@@ -3810,6 +3810,90 @@ Tinytest.add("SimpleSchema - RegEx - IPv6", function (test) {
   isTrue("::1");
 });
 
+Tinytest.add("SimpleSchema - RegEx - URL", function (test) {
+  var expr = SimpleSchema.RegEx.Url;
+  var isTrue = function (s) { test.isTrue(expr.test(s), s) };
+  var isFalse = function (s) { test.isFalse(expr.test(s), s) };
+  isTrue("http://foo.com/blah_blah");
+  isTrue("http://foo.com/blah_blah/");
+  isTrue("http://foo.com/blah_blah_(wikipedia)");
+  isTrue("http://foo.com/blah_blah_(wikipedia)_(again)");
+  isTrue("http://www.example.com/wpstyle/?p=364");
+  isTrue("https://www.example.com/foo/?bar=baz&inga=42&quux");
+  isTrue("http://✪df.ws/123");
+  isTrue("http://userid:password@example.com:8080");
+  isTrue("http://userid:password@example.com:8080/");
+  isTrue("http://userid@example.com");
+  isTrue("http://userid@example.com/");
+  isTrue("http://userid@example.com:8080");
+  isTrue("http://userid@example.com:8080/");
+  isTrue("http://userid:password@example.com");
+  isTrue("http://userid:password@example.com/");
+  isTrue("http://142.42.1.1/");
+  isTrue("http://142.42.1.1:8080/");
+  isTrue("http://➡.ws/䨹");
+  isTrue("http://⌘.ws");
+  isTrue("http://⌘.ws/");
+  isTrue("http://foo.com/blah_(wikipedia)#cite-1");
+  isTrue("http://foo.com/blah_(wikipedia)_blah#cite-1");
+  isTrue("http://foo.com/unicode_(✪)_in_parens");
+  isTrue("http://foo.com/(something)?after=parens");
+  isTrue("http://☺.damowmow.com/");
+  isTrue("http://code.google.com/events/#&product=browser");
+  isTrue("http://j.mp");
+  isTrue("ftp://foo.bar/baz");
+  isTrue("http://foo.bar/?q=Test%20URL-encoded%20stuff");
+  isTrue("http://مثال.إختبار");
+  isTrue("http://例子.测试");
+  isTrue("http://उदाहरण.परीक्षा");
+  isTrue("http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com");
+  isTrue("http://1337.net");
+  isTrue("http://a.b-c.de");
+  isTrue("http://223.255.255.254");
+  isFalse("http://");
+  isFalse("http://.");
+  isFalse("http://..");
+  isFalse("http://../");
+  isFalse("http://?");
+  isFalse("http://??");
+  isFalse("http://??/");
+  isFalse("http://#");
+  isFalse("http://##");
+  isFalse("http://##/");
+  isFalse("http://foo.bar?q=Spaces should be encoded");
+  isFalse("//");
+  isFalse("//a");
+  isFalse("///a");
+  isFalse("///");
+  isFalse("http:///a");
+  isFalse("foo.com");
+  isFalse("rdar://1234");
+  isFalse("h://test");
+  isFalse("http:// shouldfail.com");
+  isFalse(":// should fail");
+  isFalse("http://foo.bar/foo(bar)baz quux");
+  isFalse("ftps://foo.bar/");
+  isFalse("http://-error-.invalid/");
+  isFalse("http://a.b--c.de/");
+  isFalse("http://-a.b.co");
+  isFalse("http://a.b-.co");
+  isFalse("http://0.0.0.0");
+  isFalse("http://10.1.1.0");
+  isFalse("http://10.1.1.255");
+  isFalse("http://224.1.1.1");
+  isFalse("http://1.1.1.1.1");
+  isFalse("http://123.123.123");
+  isFalse("http://3628126748");
+  isFalse("http://.www.foo.bar/");
+  isFalse("http://www.foo.bar./");
+  isFalse("http://.www.foo.bar./");
+  isFalse("http://10.1.1.1");
+  isFalse("http://10.1.1.254");
+  
+  // from #113 (expression took exponentially longer)
+  isTrue("http://abc.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+});
+
 /*
  * END TESTS
  */
